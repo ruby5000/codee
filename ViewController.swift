@@ -1,7 +1,8 @@
 import UIKit
+import Alamofire
 
 class ViewController: UIViewController {
-    
+
     @IBOutlet weak var tableview: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
@@ -10,20 +11,33 @@ class ViewController: UIViewController {
     var isFetchingData = false
     var allPosts: [Post] = [] // Store all posts
     var displayedPosts: [Post] = [] // Posts to display on the current page
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupTableView()
+        setupActivityIndicator()
+        fetchPosts()
+    }
+
+    private func setupTableView() {
         tableview.register(UINib(nibName: "dataCell", bundle: .main), forCellReuseIdentifier: "dataCell")
         tableview.delegate = self
         tableview.dataSource = self
-        activityIndicator.hidesWhenStopped = true
-        fetchAllPosts()
     }
-    
-    private func fetchAllPosts() {
+
+    private func setupActivityIndicator() {
+        activityIndicator.hidesWhenStopped = true
+    }
+
+    private func fetchPosts() {
         activityIndicator.startAnimating()
         
-        APIManager.shared.fetchAllPosts { [weak self] result in
+        let url = "https://jsonplaceholder.typicode.com/posts"
+        let parameters: Parameters = [
+            "_page": currentPage,
+            "_limit": pageSize
+        ]
+        APIManager.shared.apiCalling(url: url, params: parameters) { [weak self] result in
             guard let self = self else { return }
             
             self.activityIndicator.stopAnimating()
@@ -35,6 +49,34 @@ class ViewController: UIViewController {
             case .failure(let error):
                 print("API Error: \(error.localizedDescription)")
             }
+        }
+    }
+
+    func loadMoreData() {
+        guard !isFetchingData else { return }
+        
+        isFetchingData = true
+        
+        // Calculate the range of posts to display
+        let startIndex = (currentPage - 1) * pageSize
+        let endIndex = min(startIndex + pageSize, allPosts.count)
+        
+        guard startIndex < endIndex else {
+            isFetchingData = false
+            return // No more data to load
+        }
+        
+        // Add the new posts to the displayedPosts array
+        let newPosts = Array(allPosts[startIndex..<endIndex])
+        displayedPosts.append(contentsOf: newPosts)
+        
+        // Increment the page for the next load
+        currentPage += 1
+        
+        // Reload the table view
+        DispatchQueue.main.async {
+            self.tableview.reloadData()
+            self.isFetchingData = false
         }
     }
 }
@@ -56,33 +98,9 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
         let height = scrollView.frame.size.height
-        
+
         if offsetY > contentHeight - height {
-            guard !isFetchingData else { return }
-            
-            isFetchingData = true
-            
-            // Calculate the range of posts to display
-            let startIndex = (currentPage - 1) * pageSize
-            let endIndex = min(startIndex + pageSize, allPosts.count)
-            
-            guard startIndex < endIndex else {
-                isFetchingData = false
-                return // No more data to load
-            }
-            
-            // Add the new posts to the displayedPosts array
-            let newPosts = Array(allPosts[startIndex..<endIndex])
-            displayedPosts.append(contentsOf: newPosts)
-            
-            // Increment the page for the next load
-            currentPage += 1
-            
-            // Reload the table view
-            DispatchQueue.main.async {
-                self.tableview.reloadData()
-                self.isFetchingData = false
-            }
+            loadMoreData()
         }
     }
     
@@ -90,3 +108,4 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         return 50
     }
 }
+

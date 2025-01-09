@@ -7,27 +7,13 @@ class APIManager {
     
     private init() {}
     
-    func fetchAllPosts(completion: @escaping (Result<[Post], Error>) -> Void) {
-        let url = "https://jsonplaceholder.typicode.com/posts"
-        
-        AF.request(url).responseDecodable(of: [Post].self) { response in
+    func apiCalling(url: String, params: Parameters, completion: @escaping(Result<[Post], Error>) -> Void) {
+        AF.request(url, parameters: params).responseDecodable(of: [Post].self) { response in
             switch response.result {
-            case .success(let posts):
-                completion(.success(posts))
-            case .failure(let afError):
-                completion(.failure(afError as Error)) // Convert AFError to Error
-            }
-        }
-    }
-    
-    func apicalling(url: String, params: Parameters, completion: @escaping (Result<[Post], Error>) -> Void) {
-    
-        AF.request(url).responseDecodable(of: [Post].self) {response in
-            switch response.result {
-            case .success(let post):
-                completion(.success(post))
-            case .failure(_):
-                completion(.failure(Error.self as! Error))
+            case .success(let suc):
+                completion(.success(suc))
+            case .failure(let err):
+                completion(.failure(err as Error))
             }
         }
     }
