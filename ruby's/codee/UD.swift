@@ -1,0 +1,35 @@
+//
+//  UD.swift
+//  LOL
+//
+//  Created by Chiku on 01/07/25.
+//
+
+import Foundation
+
+extension Constants.UD {
+    static let USER_FULL_NAME = "USER_FULL_NAME"
+    static let USER_ACCESS_TOKEN = "USER_ACCESS_TOKEN"
+    static let USER_EMAIL = "USER_EMAIL"
+    static let USER_NAME = "USER_NAME"
+    static let USER_DOB = "USER_DOB"
+    static let CURRENT_DEVICE_LANGUAGE_CODE = "CURRENT_DEVICE_LANGUAGE_CODE"
+    static let IS_USER_AUTH = "IS_USER_AUTH"
+    static let PAUSE_LINK_STATUS = "PAUSE_LINK_STATUS"
+    static let USER_AVTAR = "USER_AVTAR"
+    static let IS_PURCHASED = "IS_PURCHASED"
+    static let USERS_LINK = "USERS_LINK"
+    static let DEVICE_TOKEN = "DEVICE_TOKEN"
+    static let PAUSE_LINK_TIME_PERIOD = "PAUSE_LINK_TIME_PERIOD"
+    static let PREMIUM_ID = "PREMIUM_ID"
+    static let PREMIUM_TITLE = "PREMIUM_TITLE"
+    static let PROMO_SIGNATURE = "PROMO_SIGNATURE"
+    static let PROMO_NONCE = "PROMO_NONCE"
+    static let PROMO_TIMESTAMP = "PROMO_TIMESTAMP"
+    static let ORIGINAL_PRICE = "ORIGINAL_PRICE"
+    static let OFFER_PRICE = "OFFER_PRICE"
+    static let LAST_SELECTED_HOTNESS_CATEGORY_INDEX = "LAST_SELECTED_HOTNESS_CATEGORY_INDEX"
+    static let ORIGINAL_TRANSACTION_ID = "ORIGINAL_TRANSACTION_ID"
+    static let PREMIUM_PURCHASED_FROM_GAME_SCREEN = "PREMIUM_PURCHASED_FROM_GAME_SCREEN"
+    static let IS_USER_COLLABED = "IS_USER_COLLABED"
+}
